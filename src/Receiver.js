@@ -6,7 +6,7 @@ var _socket;
 var _universes = [];
 var _localhost = false;
 
-function Start({}){
+function Start(){
 	var self = this;
 	this._packet = new sACNPacket.Packet();
 
