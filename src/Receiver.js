@@ -4,8 +4,9 @@ const sACNPacket = require('./Packet.js');
 
 var _socket;
 var _universes = [];
+var _localhost = false;
 
-function Start(){
+function Start({}){
 	var self = this;
 	this._packet = new sACNPacket.Packet();
 
@@ -31,7 +32,8 @@ function Start(){
 
 }
 
-function Universe(universe){
+function Universe(universe, localhost=false){
+	_localhost = localhost
 	this._universe = universe || 1;
 	_universes[this._universe+""] = this;
 
@@ -42,7 +44,11 @@ function Universe(universe){
 
 }
 Universe.prototype.begin = function(){
-	_socket.addMembership(sACNPacket.getMulticastGroup(this._universe));
+	if(_localhost){
+		_socket.addMembership(sACNPacket.getMulticastGroup(this._universe), '127.0.0.1');
+	}else{
+		_socket.addMembership(sACNPacket.getMulticastGroup(this._universe));
+	}
 }
 Universe.prototype.on = function(event, funct){
 	if(event=="packet"){
