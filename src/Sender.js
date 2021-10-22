@@ -47,7 +47,10 @@ function Universe(universe, priority) {
   }
 }
 
-Universe.prototype.send = function (arg) {
+Universe.prototype.send = function (arg, index=null) {
+  if(index!==null){
+    index = ''+index
+  }
   var slots;
   if (Array.isArray(arg)) {
     // passed an array of addresses
@@ -60,7 +63,10 @@ Universe.prototype.send = function (arg) {
     }
   }
   this.packet.setSlots(slots);
+  //why iterate over an array like this
   for (var i in _interfaces) {
+    if(index !== null && i!==index)
+      continue
     if (_options.type && _options.type === 'unicast') {
       this._sockets[_interfaces[i]].send(
         this.packet.getBuffer(),
