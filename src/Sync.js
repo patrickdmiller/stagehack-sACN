@@ -48,7 +48,10 @@ function Universe(universe, priority) {
   }
 }
 
-Universe.prototype.send = function (arg) {
+Universe.prototype.send = function (arg, index=null) {
+  if(index!==null){
+    index = ''+index
+  }
   var slots;
   if (Array.isArray(arg)) {
     // passed an array of addresses
@@ -62,6 +65,8 @@ Universe.prototype.send = function (arg) {
   }
   this.syncPacket.setSlots(slots);
   for (var i in _interfaces) {
+    if(index !== null && i!==index)
+      continue
     this._sockets[_interfaces[i]].send(
       this.syncPacket.getBuffer(),
       5568,
